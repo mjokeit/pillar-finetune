@@ -1,11 +1,11 @@
-# Pillar Finetune
+# pillar-finetune
 
-Fine-tuning framework for Pillar medical imaging models on lung cancer prediction tasks using CT scans.
+Finetuning framework for Pillar medical imaging models.
 
 ## Table of Contents
 
 - [Installation](#installation)
-- [Fine-tuning Pillar0 on NLST Dataset](#fine-tuning-pillar0-on-nlst-dataset)
+- [Finetuning Pillar0 on NLST Dataset](#fine-tuning-pillar0-on-nlst-dataset)
 - [Data Preparation for Additional Datasets](#data-preparation-for-additional-datasets)
 - [Evaluation](#evaluation)
 - [Troubleshooting](#troubleshooting)
