@@ -148,3 +148,9 @@ metrics:
           logit_key: survival
     val: *base_metrics
     test: *base_metrics
+
+  losses:
+    - type: SurvivalLoss
+      weight: 1.0
+      kwargs:
+        logit_key: survival
