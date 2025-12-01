@@ -2,7 +2,7 @@
 uv run hf download YalaLab/Pillar0-Sybil-1.5 --local-dir logs/checkpoints 
 
 # Configuration
-CONFIG_FILE="${1:-configs/csv_dataset_setup.yaml}"
+CONFIG_FILE="${1:-configs/csv_dataset.yaml}"
 
 OMP_NUM_THREADS=$OMP_NUM_THREADS \
 uv run torchrun \

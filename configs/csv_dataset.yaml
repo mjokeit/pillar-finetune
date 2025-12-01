@@ -91,8 +91,8 @@ model:
     backbone_model_type: MultimodalAtlas
     backbone_kwargs:
       pretrained: True
-      model_repo_id: "YalaLab/PILLAR0-atlas_small_qwen8b_clip_ucsf_chest_ct_inpt_ep300__exp172"
-      model_revision: "epoch_14"
+      model_repo_id: YalaLab/Pillar0-ChestCT
+      model_revision: main
 
     head_models:
       survival:
@@ -148,3 +148,9 @@ metrics:
           logit_key: survival
     val: *base_metrics
     test: *base_metrics
+
+  losses:
+    - type: SurvivalLoss
+      weight: 1.0
+      kwargs:
+        logit_key: survival
