@@ -3,6 +3,7 @@ import json
 import ast
 from typing import Any, Dict, List, Optional
 
+import numpy as np
 import pandas as pd
 import torch
 import torch.nn.functional as F
@@ -49,6 +50,7 @@ class CSVDataset(torch.utils.data.Dataset):
     ) -> None:
         self.csv_path = csv_path
         self.num_images = num_images
+        self.max_followup = max_followup
         self.augmentations = augmentations
         self.anatomy = anatomy
         self.img_size = img_size
@@ -159,6 +161,20 @@ class CSVDataset(torch.utils.data.Dataset):
             tensor = tensor[:, :, :, crop_side:-crop_side]
         return tensor
 
+    def _compute_survival_labels(self, y: int, time_at_event: int):
+        """
+        Compute y_seq and y_mask from y and time_at_event.
+        Matches the logic in NLSTDataset.get_label().
+
+        y_seq: binary array of length max_followup, 1s from time_at_event onwards if y=1
+        y_mask: binary array of length max_followup, 1s for positions 0 to time_at_event
+        """
+        y_seq = np.zeros(self.max_followup)
+        if y:
+            y_seq[time_at_event:] = 1
+        y_mask = np.array([1] * (time_at_event + 1) + [0] * (self.max_followup - (time_at_event + 1)))
+        return y_seq.astype("float64"), y_mask.astype("float64")
+
     def __getitem__(self, idx: int) -> Dict[str, Any]:
         row = self.df.iloc[int(idx)]
 
@@ -215,12 +231,19 @@ class CSVDataset(torch.utils.data.Dataset):
             batch["has_annotation"] = False
 
         # Add passthrough columns unchanged
-
         for col in self.label_columns:
             value = row[col]
             if isinstance(value, str):
                 value = ast.literal_eval(value)
             batch[col] = torch.tensor(value)
+
+        # Compute survival labels (y_seq, y_mask) if y and time_at_event are present
+        if "y" in row and "time_at_event" in row:
+            y_val = int(row["y"])
+            time_at_event_val = int(row["time_at_event"])
+            y_seq, y_mask = self._compute_survival_labels(y_val, time_at_event_val)
+            batch["y_seq"] = torch.tensor(y_seq)
+            batch["y_mask"] = torch.tensor(y_mask)
 
         batch["accession"] = accession
         batch["sample_name"] = accession
