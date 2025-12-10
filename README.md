@@ -22,6 +22,37 @@ uv add flash-attn==2.7.0.post2 --no-build-isolation
 source .venv/bin/activate
 ```
 
+## Running Sybil1.5
+
+You can load our pretrained model trained on the NLST dataset, and score a given DICOM serie as follows:
+
+```python 
+from pillar.models.sybil import Sybil15
+
+# Initialize model 
+model = Sybil15()
+
+# Expected CSV format:
+# - series_path: Path to DICOM series directory or NIfTI file
+# - accession: Accession number (optional, extracted from path if not provided)
+# - series_number: Series number (optional, defaults to empty string)
+# - series_description: Description (optional, defaults to empty string)
+# - y: Cancer diagnosis (required for evaluation)
+# - time_at_event: For positives, this is the year of the diagnosis, starting from 0. For negatives, this is the last year of follow-up, starting from 0 (required for evaluation)
+
+# Predict cancer risk scores (runs RVE first)
+risk_scores = model.predict(inputs_csv_path="/path/to/csv")
+
+# Evaluate risk scores (runs RVE first)
+model.evaluate(inputs_csv_path="/path/to/csv")
+
+# Evaluate risk scores directly on RVE sample
+model.evaluate(rve_sample="/path/to/rve/output")
+```
+
+Note that the model expects the input to be an Axial LDCT, where the first frame is of the abdominal region and the last frame is along the clavicles.
+
+
 ## Fine-tuning Pillar0 on NLST Dataset
 
 ```bash
