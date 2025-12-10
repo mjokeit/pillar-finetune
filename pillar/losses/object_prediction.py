@@ -209,8 +209,7 @@ class SybilRegionAnnotationLoss(AbstractLoss):
         }
 
 
-# Modified from DETR to be 3D + match pillar
-
+# Modified from: https://github.com/facebookresearch/detr for 3D use + compatible with pillar
 
 class DETRObjectDetectionLoss(AbstractLoss):
     def __init__(
@@ -317,7 +316,6 @@ class DETRObjectDetectionLoss(AbstractLoss):
 
 
 class SetCriterion(nn.Module):
-    # To do Natalia: this class can be cleaned up because some of this is not being used
     """This class computes the loss for DETR.
     The process happens in two steps:
         1) we compute hungarian assignment between ground truth boxes and the outputs of the model
@@ -361,10 +359,6 @@ class SetCriterion(nn.Module):
 
         loss_ce = F.cross_entropy(src_logits.transpose(1, 2), target_classes, empty_weight)
         losses = {"loss_ce": loss_ce}
-
-        # if log:
-        #     # This diagnostic metric is better implemented as a dedicated loss/metric rather than piggybacking here.
-        #     losses['class_error'] = 100 - accuracy(src_logits[idx], target_classes_o)[0]
 
         return losses
 

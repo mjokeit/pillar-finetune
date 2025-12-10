@@ -4,10 +4,12 @@
 """
 DETR model
 """
-
+import copy
 import torch
+from torch import nn, Tensor
+import torch.nn.functional as F
 
-from torch import nn
+from typing import Optional
 
 from pillar.utils.pos_embed import gen_3d_sincos_pos_embed
 from pillar.models.heads.basic import MLP
@@ -103,16 +105,9 @@ class DETR3D(AbstractModel):
         return hs, cross_attn
 
 
-# Natalia To do: for a more general implementation, i would need a forward
-# Natalia To do: this is kind of lost out here in the wild, but is not following the structure of the rest of the code
-# Modified from: https://github.com/facebookresearch/detr for 3D use
-import copy
-import torch
-import torch.nn.functional as F
-
-from torch import nn, Tensor
-from typing import Optional, List
-
+"""
+Transformer
+"""
 
 class Transformer(nn.Module):
     def __init__(

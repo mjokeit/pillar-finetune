@@ -24,7 +24,6 @@ class SurvivalMetric(AbstractMetric):
         self.dataset_info = dataset_info
         self.split = split
         if dataset_info is None or "train" not in dataset_info:
-            # Natalia TO DO: this is a hotfix, address properly
             if not SurvivalMetric._warned_about_default_censoring:
                 logger.warning("Using default censoring for NLST distribution")
                 SurvivalMetric._warned_about_default_censoring = True
