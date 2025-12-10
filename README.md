@@ -26,19 +26,17 @@ source .venv/bin/activate
 
 You can load our pretrained model trained on the NLST dataset, and score a given DICOM serie as follows:
 
+Expected CSV format:
+  - **`series_path`**: Path to DICOM series directory or NIfTI file
+  - **`accession`**: Accession number (optional, extracted from path if not provided)
+  - **`y`**: Cancer diagnosis (required for evaluation)
+  - **`time_at_event`**: For positives, this is the year of the diagnosis, starting from 0. For negatives, this is the last year of follow-up, starting from 0 (required for evaluation)
+
 ```python 
 from pillar.models.sybil import Sybil15
 
 # Initialize model 
 model = Sybil15()
-
-# Expected CSV format:
-# - series_path: Path to DICOM series directory or NIfTI file
-# - accession: Accession number (optional, extracted from path if not provided)
-# - series_number: Series number (optional, defaults to empty string)
-# - series_description: Description (optional, defaults to empty string)
-# - y: Cancer diagnosis (required for evaluation)
-# - time_at_event: For positives, this is the year of the diagnosis, starting from 0. For negatives, this is the last year of follow-up, starting from 0 (required for evaluation)
 
 # Predict cancer risk scores (runs RVE first)
 risk_scores = model.predict(inputs_csv_path="/path/to/csv")
