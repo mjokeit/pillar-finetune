@@ -130,7 +130,7 @@ extra-index-url = ["https://download.pytorch.org/whl/cu128"]
 index-strategy = "unsafe-best-match"
 
 [tool.uv.sources]
-rad-vision-engine = { git = "https://github.com/YalaLab/rad-vision-engine.git" }
+rad-vision-engine = { git = "https://github.com/YalaLab/rave.git" }
 
 [tool.black]
 line-length = 120
